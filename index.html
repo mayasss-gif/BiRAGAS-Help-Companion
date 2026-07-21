@@ -64,10 +64,11 @@ nav .cta{background:var(--red);color:#fff;padding:9px 16px;border-radius:9px;tex
 
 /* MARQUEE */
 .marq{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#fff;overflow:hidden;margin-top:34px}
-.marq .row{display:flex;gap:38px;white-space:nowrap;padding:13px 0;font-family:var(--sans);font-weight:700;font-size:13px;letter-spacing:.04em;color:var(--sub);animation:scroll 34s linear infinite;width:max-content}
-.marq .row span{display:inline-flex;align-items:center;gap:38px}
-.marq .row span::after{content:"◆";color:var(--gold);font-size:9px}
-@keyframes scroll{to{transform:translateX(-50%)}}
+.marq .track{display:inline-flex;flex-wrap:nowrap;width:max-content;will-change:transform;animation:marq 30s linear infinite}
+.marq:hover .track{animation-play-state:paused}
+.marq .it{padding:13px 0;font-family:var(--sans);font-weight:700;font-size:13px;letter-spacing:.04em;color:var(--sub);white-space:nowrap;display:inline-flex;align-items:center}
+.marq .it::after{content:"◆";color:var(--gold);font-size:9px;margin:0 30px}
+@keyframes marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 /* SECTIONS */
 section{padding:70px 0}
@@ -263,7 +264,7 @@ footer .big{font-weight:800;color:var(--ink);font-size:15px;margin-bottom:6px}
   </div>
 </section>
 
-<div class="marq"><div class="row" id="marq"></div></div>
+<div class="marq"><div class="track" id="marq"></div></div>
 
 <section id="capabilities">
   <div class="wrap">
@@ -337,9 +338,9 @@ const DATA={"themes": [{"i": 1, "name": "Getting started & foundations", "color"
 const themes=DATA.themes, questions=DATA.questions;
 const tById={}; themes.forEach(t=>tById[t.i]=t);
 
-/* marquee */
-const mrow=themes.map(t=>t.name).join('   ◆   ');
-document.getElementById('marq').innerHTML='<span>'+mrow+'</span><span>'+mrow+'</span>';
+/* marquee — two identical groups for a seamless -50% loop */
+const items=themes.map(t=>'<span class="it">'+t.name+'</span>').join('');
+document.getElementById('marq').innerHTML=items+items;
 
 /* audience buttons */
 const auds=[...new Set(questions.map(q=>q.audience))].sort();
