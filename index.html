@@ -293,11 +293,7 @@ footer .big{font-weight:800;color:var(--ink);font-size:15px;margin-bottom:6px}
 <section id="companion">
   <div class="wrap">
     <div class="shead"><div class="rule"></div><h2>The 51 questions bioinformaticians actually ask</h2>
-      <p>Every real question — from "where do I even start?" to "how do I produce FDA-grade causal evidence?" — with a plain-language answer and its illustration. Filter by theme, by who's asking, or search.</p></div>
-    <div class="searchbar">
-      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
-      <input id="q" placeholder="Search questions, answers, modules…">
-    </div>
+      <p>Every real question — from "where do I even start?" to "how do I produce FDA-grade causal evidence?" — with a plain-language answer and its illustration.</p></div>
     <div class="audrow" id="auds"></div>
     <div class="filters" id="themes"></div>
     <div class="count" id="count"></div>
@@ -362,7 +358,6 @@ themes.forEach(t=>{
   b.onclick=()=>{curTheme=t.i;[...thEl.children].forEach(c=>c.classList.remove('on'));b.classList.add('on');render();};
   thEl.appendChild(b);
 });
-document.getElementById('q').addEventListener('input',e=>{curQ=e.target.value.toLowerCase();render();});
 
 const cardsEl=document.getElementById('cards');
 function esc(s){return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
