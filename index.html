@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BiRAGAS — The Bioinformatics Help Companion</title>
+<meta name="description" content="An illustrated, agentic causal-AI companion: 51 real bioinformatics questions across 16 themes, and how BiRAGAS answers them — from raw FASTQ to FDA-grade causal targets.">
+<style>
+:root{
+ --cream:#F6F1E9; --paper:#FFFFFF; --ink:#1A1712; --sub:#6B6154; --line:#E7DECF;
+ --red:#C8102E; --gold:#C5A572; --navy:#1F3864; --teal:#0E7C86;
+ --shadow:0 20px 55px rgba(26,20,14,.16); --shadow2:0 8px 24px rgba(26,20,14,.10);
+ --serif:Georgia,'Times New Roman',serif; --sans:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--serif);line-height:1.65;overflow-x:hidden}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+a{color:inherit}
+h1,h2,h3{line-height:1.15;margin:0}
+.kick{font-family:var(--sans);font-weight:800;letter-spacing:.26em;text-transform:uppercase;font-size:12px;color:var(--red)}
+.mono{font-family:var(--sans)}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:60;backdrop-filter:blur(12px);background:rgba(246,241,233,.82);border-bottom:1px solid var(--line)}
+nav .in{display:flex;align-items:center;gap:20px;height:62px}
+nav .brand{font-family:var(--sans);font-weight:800;letter-spacing:.12em;font-size:15px}
+nav .brand b{color:var(--red)}
+nav .links{margin-left:auto;display:flex;gap:22px;font-family:var(--sans);font-size:13.5px;font-weight:600}
+nav .links a{text-decoration:none;color:var(--sub);transition:.15s}
+nav .links a:hover{color:var(--ink)}
+nav .cta{background:var(--red);color:#fff;padding:9px 16px;border-radius:9px;text-decoration:none;font-family:var(--sans);font-weight:700;font-size:13.5px}
+@media(max-width:820px){nav .links{display:none}}
+
+/* HERO */
+.hero{position:relative;padding:70px 0 40px;overflow:hidden}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.55}
+.hero .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center;position:relative;z-index:2}
+@media(max-width:900px){.hero .grid{grid-template-columns:1fr;gap:26px}}
+.hero h1{font-size:clamp(34px,5.4vw,62px);letter-spacing:-.015em;margin:.2em 0 .1em}
+.hero .lede{font-size:clamp(17px,2.2vw,21px);color:var(--sub);max-width:34ch}
+.hero .tag{font-family:var(--sans);font-size:13px;color:var(--teal);font-weight:700;letter-spacing:.05em;margin-top:14px}
+.hbtns{display:flex;gap:14px;flex-wrap:wrap;margin-top:26px}
+.btn{font-family:var(--sans);font-weight:700;font-size:15px;text-decoration:none;padding:14px 24px;border-radius:11px;display:inline-flex;align-items:center;gap:9px;transition:.18s;border:1.6px solid transparent}
+.btn-red{background:var(--red);color:#fff;box-shadow:0 10px 26px rgba(200,16,46,.28)}
+.btn-red:hover{transform:translateY(-2px)}
+.btn-ghost{border-color:var(--gold);color:var(--ink)}
+.btn-ghost:hover{background:#fff}
+.heroart{position:relative}
+.frame{border-radius:20px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line);background:#fff;transform:rotate(-1.4deg);transition:.5s}
+.frame:hover{transform:rotate(0)}
+.frame img{width:100%;display:block}
+.floaty{position:absolute;background:#fff;border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow2);padding:11px 14px;font-family:var(--sans);font-size:12.5px;font-weight:600}
+.floaty .d{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:7px}
+.f1{top:-16px;left:-14px;animation:bob 5s ease-in-out infinite}
+.f2{bottom:-18px;right:-10px;animation:bob 6s ease-in-out infinite .8s}
+@keyframes bob{50%{transform:translateY(-11px)}}
+
+/* STATS */
+.stats{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin:14px 0 6px;position:relative;z-index:2}
+.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 24px;text-align:center;min-width:130px;box-shadow:var(--shadow2)}
+.stat b{font-size:34px;color:var(--red);font-family:var(--serif);display:block}
+.stat span{font-family:var(--sans);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sub)}
+
+/* MARQUEE */
+.marq{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#fff;overflow:hidden;margin-top:34px}
+.marq .row{display:flex;gap:38px;white-space:nowrap;padding:13px 0;font-family:var(--sans);font-weight:700;font-size:13px;letter-spacing:.04em;color:var(--sub);animation:scroll 34s linear infinite;width:max-content}
+.marq .row span{display:inline-flex;align-items:center;gap:38px}
+.marq .row span::after{content:"◆";color:var(--gold);font-size:9px}
+@keyframes scroll{to{transform:translateX(-50%)}}
+
+/* SECTIONS */
+section{padding:70px 0}
+.shead{text-align:center;max-width:720px;margin:0 auto 42px}
+.shead h2{font-size:clamp(26px,3.6vw,40px);letter-spacing:-.01em;margin:8px 0 10px}
+.shead p{color:var(--sub);font-size:17px}
+.rule{width:52px;height:4px;background:var(--red);border-radius:3px;margin:0 auto}
+
+/* CAPABILITIES */
+.caps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media(max-width:980px){.caps{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.caps{grid-template-columns:1fr}}
+.cap{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px 20px;transition:.22s}
+.cap:hover{transform:translateY(-5px);box-shadow:var(--shadow);border-color:var(--gold)}
+.capicon{width:30px;height:30px;fill:none;stroke:var(--teal);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;margin-bottom:12px}
+.cap h3{font-family:var(--sans);font-size:16px;margin-bottom:6px}
+.cap p{font-size:14.5px;color:var(--sub);line-height:1.55}
+
+/* HOW */
+.how{background:linear-gradient(180deg,#fff, #FBF7EF);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+@media(max-width:820px){.steps{grid-template-columns:1fr}}
+.step{display:flex;gap:16px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px}
+.stepn{flex:0 0 46px;height:46px;border-radius:12px;background:var(--navy);color:#fff;font-family:var(--sans);font-weight:800;font-size:20px;display:grid;place-items:center}
+.step h3{font-family:var(--sans);font-size:17px;margin-bottom:5px}
+.step p{color:var(--sub);font-size:14.5px;margin:0}
+
+/* COMPANION / Q&A */
+.filters{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-bottom:14px}
+.pill{font-family:var(--sans);font-weight:700;font-size:12.5px;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--sub);cursor:pointer;transition:.15s;white-space:nowrap}
+.pill:hover{border-color:var(--ink);color:var(--ink)}
+.pill.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pill .dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:7px;vertical-align:middle}
+.searchbar{max-width:520px;margin:0 auto 12px;position:relative}
+.searchbar input{width:100%;font-family:var(--sans);font-size:15px;padding:14px 18px 14px 44px;border-radius:12px;border:1.5px solid var(--line);background:#fff;color:var(--ink)}
+.searchbar input:focus{outline:none;border-color:var(--red)}
+.searchbar svg{position:absolute;left:15px;top:14px;width:18px;height:18px;stroke:var(--sub);fill:none;stroke-width:2}
+.audrow{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:22px}
+.count{text-align:center;font-family:var(--sans);font-size:13px;color:var(--sub);margin-bottom:22px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media(max-width:980px){.grid3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.grid3{grid-template-columns:1fr}}
+.qc{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:.25s;opacity:0;transform:translateY(18px)}
+.qc.in{opacity:1;transform:none}
+.qc:hover{box-shadow:var(--shadow);transform:translateY(-4px)}
+.qc .imgwrap{position:relative;cursor:zoom-in;overflow:hidden;aspect-ratio:16/9;background:#eee}
+.qc .imgwrap img{width:100%;height:100%;object-fit:cover;transition:.5s}
+.qc:hover .imgwrap img{transform:scale(1.05)}
+.qc .tband{position:absolute;top:10px;left:10px;font-family:var(--sans);font-weight:800;font-size:10.5px;letter-spacing:.05em;color:#fff;padding:5px 10px;border-radius:7px;text-transform:uppercase}
+.qc .qn{position:absolute;top:10px;right:10px;font-family:var(--sans);font-weight:800;font-size:12px;background:rgba(255,255,255,.92);color:var(--ink);width:34px;height:26px;display:grid;place-items:center;border-radius:7px}
+.qc .body{padding:18px 18px 20px;display:flex;flex-direction:column;gap:10px;flex:1}
+.qc .q{font-size:17px;font-weight:600;letter-spacing:-.005em}
+.qc .a{font-size:14px;color:var(--sub);line-height:1.6}
+.qc .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:8px}
+.chip{font-family:var(--sans);font-size:10.5px;font-weight:700;padding:4px 9px;border-radius:6px;background:#F4EEE3;color:var(--sub);border:1px solid var(--line)}
+.chip.aud{background:#EAF2FA;color:var(--navy);border-color:#D3E4F4}
+.chip.run{background:#E9F5EC;color:#2E7D32;border-color:#CDE9D5}
+
+/* LIGHTBOX */
+.lb{position:fixed;inset:0;background:rgba(20,16,12,.9);z-index:200;display:none;align-items:center;justify-content:center;padding:26px;cursor:zoom-out}
+.lb.on{display:flex}
+.lb img{max-width:94vw;max-height:88vh;border-radius:14px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.lb .cap{position:absolute;bottom:22px;left:0;right:0;text-align:center;color:#fff;font-family:var(--sans);font-size:14px;padding:0 20px}
+
+/* AUDIENCE / who */
+.who{background:var(--navy);color:#F4EFE7}
+.who .rule{background:var(--gold)}
+.who h2{color:#fff}
+.who .shead p{color:#cdbfa9}
+.audgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media(max-width:820px){.audgrid{grid-template-columns:repeat(2,1fr)}}
+.audcard{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:22px;text-align:center}
+.audcard b{font-family:var(--sans);display:block;font-size:16px;margin-bottom:6px}
+.audcard span{font-size:34px;color:var(--gold);font-family:var(--serif)}
+.audcard small{display:block;color:#c9bba4;font-family:var(--sans);font-size:12.5px;margin-top:4px;letter-spacing:.04em}
+
+/* CTA */
+.final{text-align:center}
+.final h2{font-size:clamp(28px,4vw,44px);margin-bottom:14px}
+.final p{color:var(--sub);font-size:18px;max-width:600px;margin:0 auto 26px}
+
+footer{border-top:1px solid var(--line);background:#fff;padding:40px 0;text-align:center;font-family:var(--sans);font-size:13.5px;color:var(--sub)}
+footer a{color:var(--red);text-decoration:none;font-weight:700}
+footer .big{font-weight:800;color:var(--ink);font-size:15px;margin-bottom:6px}
+
+.reveal{opacity:0;transform:translateY(26px);transition:.7s cubic-bezier(.2,.7,.3,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* MEDIA BAND (film + brochure) */
+.media{padding:8px 0 64px}
+.medialabel{font-family:var(--sans);font-weight:800;letter-spacing:.16em;text-transform:uppercase;font-size:12px;color:var(--red);text-align:center;margin-bottom:16px}
+.mgrid{display:grid;grid-template-columns:1.55fr 1fr;gap:24px;align-items:stretch}
+@media(max-width:860px){.mgrid{grid-template-columns:1fr}}
+.vidcard{background:#0d0b09;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.vidcard video{width:100%;display:block;background:#000;aspect-ratio:16/9}
+.vidbar{display:flex;align-items:center;gap:10px;padding:12px 14px;background:#fff;border-top:1px solid var(--line);flex-wrap:wrap}
+.vidbar .vt{font-family:var(--sans);font-weight:700;font-size:13px;color:var(--ink);margin-right:auto}
+.toggle{display:inline-flex;border:1.5px solid var(--line);border-radius:9px;overflow:hidden}
+.toggle button{font-family:var(--sans);font-weight:700;font-size:12.5px;padding:7px 13px;background:#fff;color:var(--sub);border:0;cursor:pointer;transition:.15s}
+.toggle button.on{background:var(--ink);color:#fff}
+.dlmini{font-family:var(--sans);font-weight:700;font-size:12.5px;text-decoration:none;color:var(--red);border:1.5px solid var(--gold);padding:7px 13px;border-radius:9px}
+.dlmini:hover{background:var(--cream)}
+.brochure{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow2);padding:20px;display:flex;flex-direction:column;text-align:center}
+.brochure .thumb{border-radius:12px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow2);margin-bottom:16px;position:relative}
+.brochure .thumb img{width:100%;display:block}
+.brochure .thumb .pg{position:absolute;bottom:9px;right:9px;font-family:var(--sans);font-weight:800;font-size:10.5px;background:rgba(26,20,14,.82);color:#fff;padding:4px 9px;border-radius:6px}
+.brochure h3{font-family:var(--sans);font-size:17px;margin-bottom:5px}
+.brochure p{color:var(--sub);font-size:13.5px;margin:0 0 16px}
+.brochure .dlrow{display:flex;flex-direction:column;gap:10px;margin-top:auto}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap in">
+  <div class="brand">BiRAGAS<b>.</b></div>
+  <div class="links">
+    <a href="#capabilities">Capabilities</a>
+    <a href="#how">How it works</a>
+    <a href="#companion">The 51 Questions</a>
+    <a href="#who">Who it's for</a>
+  </div>
+  <a class="cta" href="https://app.biragas.com">Open app →</a>
+</div></nav>
+
+<header class="hero">
+  <canvas id="net"></canvas>
+  <div class="wrap grid">
+    <div>
+      <div class="kick">Ayass Bioscience · Agentic Causal AI</div>
+      <h1>The Bioinformatics<br>Help Companion</h1>
+      <p class="lede">Autonomous biomarker discovery for multi-omics research — from a raw FASTQ file to a validated, FDA-grade causal target.</p>
+      <div class="tag">51 real questions · 16 themes · one causal engine</div>
+      <div class="hbtns">
+        <a class="btn btn-red" href="#companion">Explore the 51 questions</a>
+        <a class="btn btn-ghost" href="https://app.biragas.com">Launch BiRAGAS →</a>
+      </div>
+    </div>
+    <div class="heroart">
+      <div class="frame"><img src="assets/cover.jpg" alt="BiRAGAS — The Bioinformatics Help Companion"></div>
+      <div class="floaty f1"><span class="d" style="background:#2E7D32"></span>DEG · pathways · prioritization</div>
+      <div class="floaty f2"><span class="d" style="background:#C8102E"></span>Causal confidence scored</div>
+    </div>
+  </div>
+  <div class="wrap"><div class="stats">
+    <div class="stat"><b data-c="51">0</b><span>Questions answered</span></div>
+    <div class="stat"><b data-c="16">0</b><span>Themes covered</span></div>
+    <div class="stat"><b data-c="8">0</b><span>Analysis modules</span></div>
+    <div class="stat"><b data-c="4">0</b><span>Audience levels</span></div>
+  </div></div>
+</header>
+
+<section class="media">
+  <div class="wrap">
+    <div class="medialabel">Watch the film · Download the brochure</div>
+    <div class="mgrid">
+      <div class="vidcard">
+        <video id="film" controls preload="none" poster="assets/poster.jpg" playsinline>
+          <source id="filmsrc" src="assets/film_captioned.mp4" type="video/mp4">
+          Your browser can't play embedded video — use the download links.
+        </video>
+        <div class="vidbar">
+          <span class="vt" id="vidtitle">The Bioinformatics Help Companion — the film</span>
+          <div class="toggle" id="captoggle">
+            <button class="on" data-cap="captioned">Captioned</button>
+            <button data-cap="clean">Clean</button>
+          </div>
+          <a class="dlmini" id="filmdl" href="assets/film_captioned.mp4" download>⬇ MP4</a>
+        </div>
+      </div>
+      <div class="brochure">
+        <div class="thumb"><img src="assets/cover.jpg" alt="BiRAGAS brochure cover"><span class="pg">51 pages</span></div>
+        <h3>The illustrated brochure</h3>
+        <p>All 51 questions &amp; answers across 16 themes, fully illustrated — as a print-ready PDF.</p>
+        <div class="dlrow">
+          <a class="btn btn-red" style="justify-content:center" href="assets/BiRAGAS_Bioinformatics_Help_Booklet.pdf" download>⬇ Download the brochure (PDF)</a>
+          <a class="btn btn-ghost" style="justify-content:center" href="assets/BiRAGAS_Bioinformatics_Help_Booklet.pdf" target="_blank" rel="noopener">Open in a new tab</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marq"><div class="row" id="marq"></div></div>
+
+<section id="capabilities">
+  <div class="wrap">
+    <div class="shead"><div class="rule"></div><h2>What it does</h2>
+      <p>Capabilities map to real analysis modules in the product — language taken from the actual pipeline presets, not invented marketing stats.</p></div>
+    <div class="caps"><article class="cap reveal"><svg viewBox="0 0 24 24" class="capicon"><path d="M4 7h16M4 12h10M4 17h13"/></svg>
+ <h3>DEG analysis</h3><p>Identify differentially expressed genes and enriched pathways between phenotypes.</p></article><article class="cap reveal"><svg viewBox="0 0 24 24" class="capicon"><path d="M12 2v6m0 8v6M2 12h6m8 0h6"/></svg>
+ <h3>Pathway enrichment</h3><p>Enrich and interpret pathway-level signals from ranked gene lists, including GSEA-style enrichment.</p></article><article class="cap reveal"><svg viewBox="0 0 24 24" class="capicon"><path d="M4 18V9m5 9V4m5 14v-6m5 6V7"/></svg>
+ <h3>Gene prioritization</h3><p>Rank and prioritize genes by biological significance and translational relevance.</p></article><article class="cap reveal"><svg viewBox="0 0 24 24" class="capicon"><path d="M12 3a9 9 0 100 18 9 9 0 000-18zm0 0v18M3 12h18"/></svg>
+ <h3>Deconvolution</h3><p>Estimate cell-type proportions and cell-state signatures from bulk transcriptomic profiles.</p></article><article class="cap reveal"><svg viewBox="0 0 24 24" class="capicon"><path d="M4 6h16v4H4zM4 14h16v4H4z"/></svg>
+ <h3>Cohort retrieval & harmonization</h3><p>Retrieve and harmonize data from public and private sources into analysis-ready cohorts.</p></article><article class="cap reveal"><svg viewBox="0 0 24 24" class="capicon"><path d="M6 6l6 6-6 6m6-12l6 6-6 6"/></svg>
+ <h3>Causal & genetic layers</h3><p>Directed reasoning (SIGNOR-style), GWAS association, and Mendelian-randomization workflows.</p></article><article class="cap reveal"><svg viewBox="0 0 24 24" class="capicon"><path d="M7 8a2 2 0 100 4 2 2 0 000-4zm10 4a2 2 0 100 4 2 2 0 000-4zM9 15a2 2 0 100 4 2 2 0 000-4z"/></svg>
+ <h3>Single-cell analysis</h3><p>Single-cell RNA-seq: clustering, cell types, markers, and states.</p></article><article class="cap reveal"><svg viewBox="0 0 24 24" class="capicon"><path d="M12 2l3 7h7l-6 4 2 7-6-4-6 4 2-7-6-4h7z"/></svg>
+ <h3>Perturbation analysis</h3><p>Analyze expression perturbations using DepMap, L1000, and related integrated datasets.</p></article></div>
+  </div>
+</section>
+
+<section id="how" class="how">
+  <div class="wrap">
+    <div class="shead"><div class="rule"></div><h2>How it works</h2>
+      <p>A simple path from data to interpretable outputs — aligned with how the platform's analysis graph actually runs.</p></div>
+    <div class="steps"><div class="step reveal"><div class="stepn">1</div><div><h3>Bring your cohort</h3><p>Upload study data or retrieve and harmonize cohorts from supported sources so analyses start from consistent inputs.</p></div></div><div class="step reveal"><div class="stepn">2</div><div><h3>Plan &amp; run analyses</h3><p>The agentic workflow plans multi-step pipelines — DEG, pathways, prioritization, deconvolution, and related modules — then executes them as configured runs.</p></div></div><div class="step reveal"><div class="stepn">3</div><div><h3>Review results</h3><p>Inspect outputs, figures, and reports in the product workspace, then iterate on the next question without leaving the platform.</p></div></div></div>
+  </div>
+</section>
+
+<section id="companion">
+  <div class="wrap">
+    <div class="shead"><div class="rule"></div><h2>The 51 questions bioinformaticians actually ask</h2>
+      <p>Every real question — from "where do I even start?" to "how do I produce FDA-grade causal evidence?" — with a plain-language answer and its illustration. Filter by theme, by who's asking, or search.</p></div>
+    <div class="searchbar">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+      <input id="q" placeholder="Search questions, answers, modules…">
+    </div>
+    <div class="audrow" id="auds"></div>
+    <div class="filters" id="themes"></div>
+    <div class="count" id="count"></div>
+    <div class="grid3" id="cards"></div>
+  </div>
+</section>
+
+<section id="who" class="who">
+  <div class="wrap">
+    <div class="shead"><div class="rule"></div><h2>Who it's for</h2>
+      <p>Whatever your seat at the bench or the desk — the companion meets you at your level.</p></div>
+    <div class="audgrid" id="audgrid"></div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <h2>From raw reads to a causal answer you can trust.</h2>
+    <p>BiRAGAS answers the questions bioinformaticians actually ask — and tells you how confident it is in every answer.</p>
+    <div class="hbtns" style="justify-content:center">
+      <a class="btn btn-red" href="https://app.biragas.com">Go to app.biragas.com →</a>
+      <a class="btn btn-ghost" href="mailto:mayass@ayassbioscience.com">Talk to us</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="big">Ayass Bioscience · BiRAGAS causal platform</div>
+  <div>Marketing companion · The product app lives at <a href="https://app.biragas.com">app.biragas.com</a></div>
+  <div style="margin-top:8px">Questions, a demo, or a conversation? <a href="mailto:mayass@ayassbioscience.com">mayass@ayassbioscience.com</a></div>
+  <div style="margin-top:14px;color:#B3A991">© 2026 Ayass Bioscience. Illustrated Q&amp;A companion.</div>
+</footer>
+
+<div class="lb" id="lb"><img id="lbimg" src="" alt=""><div class="cap" id="lbcap"></div></div>
+
+<script>
+const DATA={"themes": [{"i": 1, "name": "Getting started & foundations", "color": "#C8102E"}, {"i": 2, "name": "Data ingestion & QC", "color": "#B45309"}, {"i": 3, "name": "Differential expression (DEG)", "color": "#1F6FB2"}, {"i": 4, "name": "Batch effects & cross-dataset harmonization", "color": "#0E7C86"}, {"i": 5, "name": "Single-cell & multi-omics", "color": "#7C3AED"}, {"i": 6, "name": "Functional enrichment & pathways", "color": "#0E7490"}, {"i": 7, "name": "Target prioritization & disease networks", "color": "#BE185D"}, {"i": 8, "name": "Temporal & dynamic analysis", "color": "#4338CA"}, {"i": 9, "name": "CRISPR & functional perturbation", "color": "#2E7D32"}, {"i": 10, "name": "Genetic causal evidence (GWAS / MR)", "color": "#9333EA"}, {"i": 11, "name": "Causal inference & DAGs", "color": "#D97706"}, {"i": 12, "name": "In-silico trials & patient stratification", "color": "#0369A1"}, {"i": 13, "name": "Regulatory & FDA-grade evidence", "color": "#DB2777"}, {"i": 14, "name": "Reproducibility, provenance & automation", "color": "#525252"}, {"i": 15, "name": "Strategic drug-discovery questions", "color": "#15803D"}, {"i": 16, "name": "Common lab bottlenecks -> BiRAGAS solution", "color": "#B91C1C"}], "questions": [{"theme": "Getting started & foundations", "q": 1, "question": "I'm new to RNA-seq. Where do I even start with a raw dataset and what does a full analysis look like end-to-end?", "answer": "BiRAGAS gives you the whole pipeline as one guided chain: pull a public cohort, QC/align raw reads, quantify, run DEG, enrich pathways, prioritize genes, then (if you want) go all the way to a causal target dossier. You don't stitch tools together - open a module to see exactly what inputs it needs and what plots it produces, and ask Causion in plain English what to run next.", "audience": "Student / Trainee", "runs": "Full chain", "modules": "Cohort retrieval; FASTQ processing; DEG analysis; Pathway enrichment", "output": "Reports + figures at each step", "ti": 1, "img": "assets/q01.jpg", "modlist": ["Cohort retrieval", "FASTQ processing", "DEG analysis", "Pathway enrichment"]}, {"theme": "Getting started & foundations", "q": 2, "question": "I don't know how to code or run command-line bioinformatics tools. Can I still analyze my PI's data?", "answer": "Yes. Causion, the natural-language co-pilot, sits in front of all 28 modules. You type 'Run DEG on these counts, case vs control' and it configures parameters, routes to the right module, and returns results with figures. No R/Python or pipeline scripting required - it lowers the barrier from 'trained bioinformatician' to any translational scientist.", "audience": "Student / Trainee", "runs": "In-app", "modules": "Causion co-pilot (all modules)", "output": "Guided results", "ti": 1, "img": "assets/q02.jpg", "modlist": ["Causion co-pilot (all modules)"]}, {"theme": "Getting started & foundations", "q": 3, "question": "How do I get a public dataset (e.g. from GEO) into a usable form for analysis?", "answer": "Cohort retrieval pulls disease cohorts directly from GEO / ArrayExpress with tissue and experiment filters, and returns a cohort directory plus a clean sample-metadata sheet ready for downstream steps - no manual FTP downloads or reformatting.", "audience": "Student / Trainee", "runs": "Full engine", "modules": "Cohort retrieval", "output": "cohort dir + sample metadata", "ti": 1, "img": "assets/q03.jpg", "modlist": ["Cohort retrieval"]}, {"theme": "Getting started & foundations", "q": 4, "question": "What's the difference between correlation and causation in my gene list, and why should I care?", "answer": "This is the core idea BiRAGAS is built on. Standard tools tell you Gene A and Gene B move together (correlation) - but not which one drives disease and which is a bystander. A drug aimed at a bystander fails. BiRAGAS adds causal layers (genetics, temporality, interventional simulation) and scores each finding as a Driver vs Candidate, so you act on causes, not passengers.", "audience": "Student / Trainee", "runs": "Mixed", "modules": "Causal DAG builder; Causal calculus; GWAS / Mendelian randomization", "output": "Causal Confidence Scores", "ti": 1, "img": "assets/q04.jpg", "modlist": ["Causal DAG builder", "Causal calculus", "GWAS / Mendelian randomization"]}, {"theme": "Data ingestion & QC", "q": 5, "question": "I have raw FASTQ files (or only SRA accessions). How do I QC and align them reproducibly?", "answer": "FASTQ processing quality-controls and aligns raw reads, optionally converting SRA first, and emits alignment + QC metrics as a versioned output - so the ingestion step is standardized and auditable rather than an ad-hoc script per project.", "audience": "Bioinformatician", "runs": "Full engine", "modules": "FASTQ processing", "output": "aligned output + QC", "ti": 2, "img": "assets/q05.jpg", "modlist": ["FASTQ processing"]}, {"theme": "Data ingestion & QC", "q": 6, "question": "How do I quantify total-RNA expression with a proper case/control design?", "answer": "Total RNA pipeline ingests and quantifies total-RNA (TPM/abundance) with the case/control design attached, producing a quantification directory that flows straight into DEG and harmonization without re-mapping sample labels.", "audience": "Bioinformatician", "runs": "Full engine", "modules": "Total RNA pipeline", "output": "quantification dir", "ti": 2, "img": "assets/q06.jpg", "modlist": ["Total RNA pipeline"]}, {"theme": "Data ingestion & QC", "q": 7, "question": "My QC shows outlier samples and low-quality libraries. How does the platform flag them before I waste time on DEG?", "answer": "QC + alignment metrics are produced at ingestion, and harmonization diagnostics (PCA/UMAP) surface outliers and library-size problems before differential testing - so you catch bad samples at the front of the chain, not after a misleading DEG run.", "audience": "Bioinformatician", "runs": "Full engine", "modules": "FASTQ processing; Data harmonization", "output": "QC metrics + PCA/UMAP diagnostics", "ti": 2, "img": "assets/q07.jpg", "modlist": ["FASTQ processing", "Data harmonization"]}, {"theme": "Differential expression (DEG)", "q": 8, "question": "How do I run a correct differential-expression analysis without messing up the statistics?", "answer": "DEG analysis runs DESeq2 / edgeR / limma-voom on counts with proper normalization and FDR (multiple-testing) correction built in - so you get valid adjusted p-values and log2 fold-changes instead of an incorrect raw t-test on counts. Runs in-app with volcano, heatmap, MA and p-value distribution plots.", "audience": "Student / Trainee", "runs": "In-app", "modules": "DEG analysis", "output": "DEG base dir + volcano/heatmap/MA", "ti": 3, "img": "assets/q08.jpg", "modlist": ["DEG analysis"]}, {"theme": "Differential expression (DEG)", "q": 9, "question": "Which DE method should I use - DESeq2, edgeR, or limma - and can I compare them?", "answer": "The DEG module supports DESeq2, edgeR and limma so you can pick the method appropriate to your design (or cross-check concordance). All apply correct normalization and FDR, and report effect sizes (log2FC) alongside significance.", "audience": "Bioinformatician", "runs": "In-app", "modules": "DEG analysis", "output": "DEG tables", "ti": 3, "img": "assets/q09.jpg", "modlist": ["DEG analysis"]}, {"theme": "Differential expression (DEG)", "q": 10, "question": "My DEG list is hundreds of genes long and I can't tell which ones matter. How do I get a defensible short list?", "answer": "Gene prioritization composites log2FC, statistical significance and biological context into a single ranked score - collapsing a noisy DEG list into a defensible short list. That prioritized set then feeds enrichment, network and causal modules.", "audience": "Senior Scientist", "runs": "In-app", "modules": "DEG analysis; Gene prioritization", "output": "prioritized genes", "ti": 3, "img": "assets/q10.jpg", "modlist": ["DEG analysis", "Gene prioritization"]}, {"theme": "Differential expression (DEG)", "q": 11, "question": "I want to pool several datasets but batch effects dominate the signal. How do I merge cohorts safely?", "answer": "Data harmonization performs batch-effect correction and cross-dataset harmonization, with PCA/UMAP diagnostics so you can verify batches actually mixed. This lets you combine cohorts to gain power without letting a technical batch masquerade as biology.", "audience": "Bioinformatician", "runs": "Full engine", "modules": "Data harmonization", "output": "harmonized matrix + PCA/UMAP", "ti": 3, "img": "assets/q11.jpg", "modlist": ["Data harmonization"]}, {"theme": "Differential expression (DEG)", "q": 12, "question": "How do I know harmonization didn't erase real biological differences along with the batch effect?", "answer": "The module returns PCA/UMAP before/after diagnostics so you can confirm samples separate by biology (condition) and not by batch after correction - making the correction auditable rather than a black box.", "audience": "Senior Scientist", "runs": "Full engine", "modules": "Data harmonization", "output": "diagnostic plots", "ti": 3, "img": "assets/q12.jpg", "modlist": ["Data harmonization"]}, {"theme": "Single-cell & multi-omics", "q": 13, "question": "I have scRNA-seq data - how do I go from raw matrix to clusters, cell types, DE and trajectories?", "answer": "Single-cell analysis handles clustering, integration across samples, per-cluster differential expression, and trajectory / diffusion-pseudotime (DPT) inference in one module - the standard Scanpy/Seurat-style workflow without hand-assembling it.", "audience": "Bioinformatician", "runs": "In-app", "modules": "Single-cell analysis", "output": "single-cell dir", "ti": 5, "img": "assets/q13.jpg", "modlist": ["Single-cell analysis"]}, {"theme": "Single-cell & multi-omics", "q": 14, "question": "I only have bulk RNA-seq but need cell-type proportions. Can I estimate composition without single-cell data?", "answer": "Deconvolution estimates cell-type abundances from bulk expression using CIBERSORTx / xCell / Bisque - so you recover composition shifts (e.g. immune infiltration) from bulk data you already have.", "audience": "Bioinformatician", "runs": "In-app", "modules": "Deconvolution", "output": "cell-type abundances", "ti": 5, "img": "assets/q14.jpg", "modlist": ["Deconvolution"]}, {"theme": "Single-cell & multi-omics", "q": 15, "question": "I have transcriptomics plus other omics layers. How do I integrate them instead of analyzing each alone?", "answer": "Multi-omics analysis integrates multiple omics layers into shared latent factors / cross-omics structure, so you find coordinated signals across layers rather than reconciling separate single-omics gene lists by hand.", "audience": "Senior Scientist", "runs": "In-app", "modules": "Multi-omics analysis", "output": "multi-omics factors", "ti": 5, "img": "assets/q15.jpg", "modlist": ["Multi-omics analysis"]}, {"theme": "Functional enrichment & pathways", "q": 16, "question": "How do I turn my gene list into biological pathways/processes?", "answer": "Pathway enrichment runs overrepresentation analysis and consolidates redundant terms over your prioritized gene set; GSEA pathway enrichment runs ranked gene-set enrichment (NES) over the full DEG result so you capture coordinated shifts even without a hard significance cutoff.", "audience": "Student / Trainee", "runs": "In-app", "modules": "Pathway enrichment; GSEA pathway enrichment", "output": "pathway consolidation", "ti": 6, "img": "assets/q16.jpg", "modlist": ["Pathway enrichment", "GSEA pathway enrichment"]}, {"theme": "Functional enrichment & pathways", "q": 17, "question": "ORA vs GSEA - when should I use which, and can I run both?", "answer": "Both are provided. Use overrepresentation (ORA / Pathway enrichment) on a defined significant set; use GSEA when you want to detect coordinated, subtle shifts across the ranked DEG list. Running both and comparing consolidated pathways is a common cross-check.", "audience": "Bioinformatician", "runs": "In-app", "modules": "Pathway enrichment; GSEA pathway enrichment", "output": "consolidated pathways", "ti": 6, "img": "assets/q17.jpg", "modlist": ["Pathway enrichment", "GSEA pathway enrichment"]}, {"theme": "Functional enrichment & pathways", "q": 18, "question": "I want per-sample pathway activity to stratify patients, not just a global enrichment. Is that possible?", "answer": "In-silico pathway activity infers pathway activity per sample, giving you a sample x pathway matrix you can use to stratify patients or feed responder analysis - moving from one global enrichment to individual-level pathway signatures.", "audience": "Senior Scientist", "runs": "Full engine", "modules": "In-silico pathway activity", "output": "pathway activity dir", "ti": 6, "img": "assets/q18.jpg", "modlist": ["In-silico pathway activity"]}, {"theme": "Functional enrichment & pathways", "q": 19, "question": "How do I move from 'differentially expressed' to 'likely disease-relevant module' rather than isolated genes?", "answer": "Disease-module detection finds enriched subnetworks / disease modules in the expression landscape, so you reason about coherent functional modules (and their hubs) instead of a flat gene list.", "audience": "Senior Scientist", "runs": "In-app", "modules": "Disease-module detection", "output": "module dir", "ti": 6, "img": "assets/q19.jpg", "modlist": ["Disease-module detection"]}, {"theme": "Functional enrichment & pathways", "q": 20, "question": "In my candidate network, which genes are the structurally important control points worth targeting?", "answer": "Centrality calculator scores DAG nodes by betweenness, closeness, eigenvector and PageRank centrality - surfacing the structural bottlenecks/hubs that make the best intervention points, ranked on the validated causal graph rather than a correlation network.", "audience": "Drug Discovery / Translational", "runs": "In-app", "modules": "Centrality calculator", "output": "centrality-enriched DAG", "ti": 6, "img": "assets/q20.jpg", "modlist": ["Centrality calculator"]}, {"theme": "Functional enrichment & pathways", "q": 21, "question": "How do I expand a small seed target set into a fuller, evidence-backed candidate set?", "answer": "Gene-set builder expands your target set by combining the prioritized DEGs with genetic evidence, so the expansion is grounded in causal/genetic support rather than guilt-by-association co-expression alone.", "audience": "Drug Discovery / Translational", "runs": "Full engine", "modules": "Gene-set builder; Gene prioritization", "output": "expanded gene set", "ti": 6, "img": "assets/q21.jpg", "modlist": ["Gene-set builder", "Gene prioritization"]}, {"theme": "Temporal & dynamic analysis", "q": 22, "question": "I have a time-course / treatment series. How do I model expression trajectories over time?", "answer": "Temporal analysis (bulk) fits bulk time-course models of expression trajectories across treatment/time, so you characterize dynamic response patterns instead of collapsing timepoints into a single contrast.", "audience": "Bioinformatician", "runs": "Full engine", "modules": "Temporal analysis (bulk)", "output": "temporal dir", "ti": 8, "img": "assets/q22.jpg", "modlist": ["Temporal analysis (bulk)"]}, {"theme": "Temporal & dynamic analysis", "q": 23, "question": "Can I infer directional, lead-lag relationships between genes from time-series data?", "answer": "Temporal Granger analysis derives Granger-causality edges from time-series expression - i.e. which genes' past values predict others' future values - giving you a temporal directionality layer that pure correlation can't provide. This is one of the four evidence streams feeding the causal graph.", "audience": "Senior Scientist", "runs": "In-app", "modules": "Temporal Granger analysis", "output": "granger edges", "ti": 8, "img": "assets/q23.jpg", "modlist": ["Temporal Granger analysis"]}, {"theme": "CRISPR & functional perturbation", "q": 24, "question": "I ran a pooled CRISPR screen. How do I call hits rigorously?", "answer": "CRISPR screening performs pooled-screen hit-calling with MAGeCK (RRA and MLE) and BAGEL2 - the field-standard essentiality/enrichment callers - so your hit list is reproducible and method-cross-checked rather than a single ad-hoc ranking.", "audience": "Bioinformatician", "runs": "Full engine", "modules": "CRISPR screening", "output": "screening dir", "ti": 9, "img": "assets/q24.jpg", "modlist": ["CRISPR screening"]}, {"theme": "CRISPR & functional perturbation", "q": 25, "question": "I have single-cell CRISPR (Perturb-seq) data. How do I connect guides to transcriptional phenotypes?", "answer": "CRISPR Perturb-seq analyzes sgRNA-based single-cell screens with hit calling, linking each perturbation to its single-cell transcriptional consequence - so you read out mechanism, not just fitness.", "audience": "Bioinformatician", "runs": "Full engine", "modules": "CRISPR Perturb-seq", "output": "crispr dir", "ti": 9, "img": "assets/q25.jpg", "modlist": ["CRISPR Perturb-seq"]}, {"theme": "CRISPR & functional perturbation", "q": 26, "question": "How do I profile editing outcomes (indels, efficiency) from targeted / amplicon CRISPR?", "answer": "CRISPR targeted / amplicon performs deep targeted/amplicon editing profiling - indel spectra and editing efficiency - so you QC and quantify your edits precisely at each locus.", "audience": "Bioinformatician", "runs": "Full engine", "modules": "CRISPR targeted / amplicon", "output": "targeted dir", "ti": 9, "img": "assets/q26.jpg", "modlist": ["CRISPR targeted / amplicon"]}, {"theme": "CRISPR & functional perturbation", "q": 27, "question": "Wet-lab CRISPR is slow and expensive. Can I predict knockout consequences before touching a cell?", "answer": "Perturbation analysis runs in-silico knockouts over your prioritized genes using DepMap dependency and L1000 drug-response evidence. Its MultiKnockout engine uses a 7-method ensemble (topological do-calculus, Bayesian noisy-OR, Monte-Carlo n=500, pathway-specific, feedback-adjusted, ODE-dynamic, mutual-information); the MegaKnockout engine computes any knockout's disease effect in ~O(1) via a sparse resolvent [I-(alpha)W]^-1 (alpha=0.85), scaling to 22.2 billion gene-pair predictions. It filters inactive/paradoxical predictions before you commit wet-lab resources.", "audience": "Drug Discovery / Translational", "runs": "Full engine", "modules": "Perturbation analysis", "output": "perturbation dir", "ti": 9, "img": "assets/q27.jpg", "modlist": ["Perturbation analysis"]}, {"theme": "CRISPR & functional perturbation", "q": 28, "question": "How can I tell whether a gene is genuinely causal for the disease and not just correlated in expression?", "answer": "GWAS / Mendelian randomization uses natural genetic variants as instruments to estimate the causal effect on outcome, running 5 MR methods (IVW, MR-Egger, Weighted Median, MR-PRESSO, CAUSE) with 4 sensitivity tests (Cochran Q, Steiger directionality, leave-one-out, Egger intercept) and requiring F-statistic > 10 to reject weak instruments, plus eQTL colocalization to confirm a shared causal variant. This orients edges causally and guards against confounding and reverse causation.", "audience": "Senior Scientist", "runs": "Full engine", "modules": "GWAS / Mendelian randomization", "output": "MR + genetic evidence", "ti": 9, "img": "assets/q28.jpg", "modlist": ["GWAS / Mendelian randomization"]}, {"theme": "CRISPR & functional perturbation", "q": 29, "question": "How do I avoid designing a therapeutic against the wrong biomarker (a classic, billion-dollar mistake)?", "answer": "Mendelian randomization is specifically used to prevent false leads from confounding or reverse causation. By requiring genetic-instrument support (and colocalization) before a target is elevated, BiRAGAS screens out associations that would otherwise lead you to build a drug for a passenger biomarker.", "audience": "Drug Discovery / Translational", "runs": "Full engine", "modules": "GWAS / Mendelian randomization; Causal calculus", "output": "genetic causal evidence", "ti": 9, "img": "assets/q29.jpg", "modlist": ["GWAS / Mendelian randomization", "Causal calculus"]}, {"theme": "CRISPR & functional perturbation", "q": 30, "question": "Can I anchor literature-curated signaling relationships to my own data's genetic evidence?", "answer": "SIGNOR causality overlays literature-curated signed causal edges (activation/inhibition) from SIGNOR, anchored by the genetic evidence in your analysis - so mechanistic prior knowledge is fused with, and constrained by, your data rather than assumed.", "audience": "Senior Scientist", "runs": "Full engine", "modules": "SIGNOR causality", "output": "SIGNOR subnetwork", "ti": 9, "img": "assets/q30.jpg", "modlist": ["SIGNOR causality"]}, {"theme": "Causal inference & DAGs", "q": 31, "question": "How do I actually build a cause-and-effect graph of my disease rather than a co-expression network?", "answer": "Causal DAG builder learns a consensus directed acyclic graph with the PC-stable algorithm (gaussCItest, bootstrap n=100) and fuses 9 evidence streams via noisy-OR confidence aggregation [C = 1-(1-C_old)(1-C_new)], with streams weighted MR 0.95 > GWAS/SIGNOR 0.90 > CRISPR/eQTL 0.85 > database 0.80 > temporal 0.65 > statistical 0.35. The cascade reduces ~20,000 genes to a handful of Tier-1 drivers, each edge carrying its data lineage and rationale - not an undirected correlation map.", "audience": "Senior Scientist", "runs": "In-app", "modules": "Causal DAG builder", "output": "consensus + validated DAG", "ti": 11, "img": "assets/q31.jpg", "modlist": ["Causal DAG builder"]}, {"theme": "Causal inference & DAGs", "q": 32, "question": "Given my causal graph, which effects are actually identifiable, and what are the confounders/back-door paths?", "answer": "Causal calculus applies Pearl's do-calculus to the validated DAG: P(Y|do(X)) is evaluated by graph surgery (removing X's incoming edges, setting do(X), propagating). It determines identifiability, derives the correct back-door adjustment sets via the back-door criterion and d-separation, and detects forks/colliders and pleiotropy (MR-Egger intercept) - so estimates are the ones the graph actually supports.", "audience": "Drug Discovery / Translational", "runs": "In-app", "modules": "Causal calculus", "output": "identified causal structure", "ti": 11, "img": "assets/q32.jpg", "modlist": ["Causal calculus"]}, {"theme": "Causal inference & DAGs", "q": 33, "question": "How does the platform combine four different kinds of evidence into one trustworthy answer?", "answer": "BiRAGAS converges four independent streams - Observational (DE/enrichment), Temporal (Granger), Genetic (5-method MR + eQTL colocalization), and Interventional (do-calculus + in-silico CRISPR) - into one causal graph. Agreement across independent modalities (multi-stream convergence) is what raises confidence, and each finding is scored accordingly.", "audience": "Senior Scientist", "runs": "Mixed", "modules": "Causal DAG builder; Causal calculus; GWAS / Mendelian randomization; Temporal Granger analysis; Perturbation analysis", "output": "validated multi-evidence DAG", "ti": 11, "img": "assets/q33.jpg", "modlist": ["Causal DAG builder", "Causal calculus", "GWAS / Mendelian randomization", "Temporal Granger analysis", "Perturbation analysis"]}, {"theme": "Causal inference & DAGs", "q": 34, "question": "Can I rank therapeutic targets at the population level and see where resistance would emerge?", "answer": "In silico perturbation (population) ranks targets on a 7-dimension score (causal 0.25, centrality 0.20, druggability 0.15, efficacy 0.15, safety 0.10, resistance 0.10, translatability 0.05) and runs explicit resistance analysis across 5 mechanisms (feedback, bypass, redundancy, compensation, variability) - then recommends 2-3 target combinations to block the escape routes it predicts.", "audience": "Drug Discovery / Translational", "runs": "In-app", "modules": "In silico perturbation (population)", "output": "ranked targets", "ti": 11, "img": "assets/q34.jpg", "modlist": ["In silico perturbation (population)"]}, {"theme": "Causal inference & DAGs", "q": 35, "question": "How do I figure out which patients will respond to a candidate drug (and which won't)?", "answer": "In silico perturbation (patient) does patient-stratified target ranking and assigns responder clusters - moving therapy from population guesswork toward individual-level precision by simulating perturbation response per patient subgroup.", "audience": "Drug Discovery / Translational", "runs": "Full engine", "modules": "In silico perturbation (patient)", "output": "patient-stratified targets", "ti": 11, "img": "assets/q35.jpg", "modlist": ["In silico perturbation (patient)"]}, {"theme": "Causal inference & DAGs", "q": 36, "question": "Why are some patients resistant to an experimental drug? Can BiRAGAS explain the mechanism?", "answer": "By simulating perturbations on patient-stratified causal graphs and analyzing compensation/resistance nodes, BiRAGAS surfaces the mechanistic bypass routes (e.g. a compensatory pathway) that make a subgroup resistant - the kind of 'why' that a validated AML case study demonstrated (bypass calls matched patient observations).", "audience": "Drug Discovery / Translational", "runs": "Full engine", "modules": "In silico perturbation (patient); Perturbation analysis; Causal calculus", "output": "resistance mechanism report", "ti": 11, "img": "assets/q36.jpg", "modlist": ["In silico perturbation (patient)", "Perturbation analysis", "Causal calculus"]}, {"theme": "Regulatory & FDA-grade evidence", "q": 37, "question": "The FDA now wants mechanistic causal evidence for a biomarker's role. How do I produce that?", "answer": "Since the 2018 Biomarker Qualification Guidance, the FDA requires evidence of a biomarker's role in the causal/outcome pathway. BiRAGAS produces this natively: every output carries Causal Confidence Scoring and a source-linked, FDA-aligned causal target dossier - it's integral to the architecture, not a bolted-on service.", "audience": "Drug Discovery / Translational", "runs": "Full engine", "modules": "Molecular report / dossier; Causal calculus", "output": "causal target dossier", "ti": 13, "img": "assets/q37.jpg", "modlist": ["Molecular report / dossier", "Causal calculus"]}, {"theme": "Regulatory & FDA-grade evidence", "q": 38, "question": "How trustworthy is any single BiRAGAS call - can I defend it to a regulator or reviewer?", "answer": "Each finding gets a Causal Confidence Score = Bradford-Hill criteria met / 8 (strength, consistency, specificity, temporality, gradient, plausibility, coherence, experiment). Tiers: Tier 1 Driver = CCS >= 0.8 with predicted effect > 50% (FDA-submission grade); Tier 2 Strong Candidate >= 0.6 (2+ independent streams); Tier 3 Candidate >= 0.5. The 7-step Bayesian composite (statistical 30%, RAG-grounding 25%, MR proof 25%, multi-agent 15%, plausibility 5%) benchmarked at AUROC 0.947 against clinical outcomes. Every step is source-linked with retained provenance - no black boxes.", "audience": "Drug Discovery / Translational", "runs": "Full engine", "modules": "Molecular report / dossier; Causal DAG builder", "output": "CCS-ranked, source-linked output", "ti": 13, "img": "assets/q38.jpg", "modlist": ["Molecular report / dossier", "Causal DAG builder"]}, {"theme": "Regulatory & FDA-grade evidence", "q": 39, "question": "Does the platform ever admit uncertainty, or does it always give a confident answer?", "answer": "It abstains when appropriate. In the BeatAML validation, on the candidates it could not support, BiRAGAS reported low confidence or abstained rather than emit a false positive - the CCS framework is designed to know what it does not know, which is what makes the confident calls credible.", "audience": "Senior Scientist", "runs": "Full engine", "modules": "Molecular report / dossier", "output": "CCS with abstention", "ti": 13, "img": "assets/q39.jpg", "modlist": ["Molecular report / dossier"]}, {"theme": "Regulatory & FDA-grade evidence", "q": 40, "question": "Our discovery pipeline is stitched from many vendors' tools with no shared provenance. How does BiRAGAS fix that?", "answer": "BiRAGAS is one end-to-end chained engine: raw sequences -> harmonization -> prioritization -> causal graph -> genetic validation -> in-silico trials -> dossier, with zero manual handoffs and full provenance at every step. It replaces the fragmented, non-auditable multi-vendor chain where 'evidence dies' at each handoff.", "audience": "Bioinformatician", "runs": "Full chain", "modules": "All modules (chained pipeline)", "output": "auditable end-to-end run", "ti": 13, "img": "assets/q40.jpg", "modlist": ["All modules (chained pipeline)"]}, {"theme": "Regulatory & FDA-grade evidence", "q": 41, "question": "How do I make an analysis reproducible and auditable months later?", "answer": "Every step is fully auditable with retained data lineage and rationale (the DAG records provenance behind each connection), and the pipeline is a single engine rather than one-off scripts - so a run can be traced and re-executed rather than reverse-engineered from a folder of intermediate files.", "audience": "Bioinformatician", "runs": "Full chain", "modules": "Molecular report / dossier; Causal DAG builder", "output": "provenance-tracked run", "ti": 13, "img": "assets/q41.jpg", "modlist": ["Molecular report / dossier", "Causal DAG builder"]}, {"theme": "Regulatory & FDA-grade evidence", "q": 42, "question": "I don't remember the exact parameters or which module to use. Can I just describe what I want?", "answer": "Yes - Causion is a natural-language agent (LangGraph supervisor, 16 agents) over all 28 modules, wired to 13 external knowledge APIs (ChEMBL, KEGG, Reactome, STRING, PubMed, OpenFDA, Ensembl, DGIdb...). Say 'Map the causal genetic nodes for condition X' or 'Simulate a patient perturbation trial' and it interprets intent, routes to the right module, sets parameters and returns the result. Every claim it makes is grounded against an 8.6M-vector Bio-RAG index and passed through a hallucination shield, so you don't need to memorize the pipeline - or worry it invents edges.", "audience": "Student / Trainee", "runs": "In-app", "modules": "Causion co-pilot (all modules)", "output": "guided execution", "ti": 13, "img": "assets/q42.jpg", "modlist": ["Causion co-pilot (all modules)"]}, {"theme": "Strategic drug-discovery questions", "q": 43, "question": "90% of trials fail, often from a wrong target. How does BiRAGAS reduce that risk upstream?", "answer": "BiRAGAS operates upstream of molecular design - at causal target identification and validation, the highest-stakes step. By requiring convergent causal evidence (genetic + temporal + interventional + observational) and scoring drivers vs passengers before a target advances, it compresses upstream timelines and reduces the late-stage failures that come from chasing the wrong target.", "audience": "Drug Discovery / Translational", "runs": "Mixed", "modules": "Causal DAG builder; GWAS / Mendelian randomization; In silico perturbation (population)", "output": "validated causal targets", "ti": 15, "img": "assets/q43.jpg", "modlist": ["Causal DAG builder", "GWAS / Mendelian randomization", "In silico perturbation (population)"]}, {"theme": "Strategic drug-discovery questions", "q": 44, "question": "Competitors design drugs for a target - what does BiRAGAS do that they don't?", "answer": "Tools like Recursion, Insilico and Schrodinger design/optimize molecules for a given target; genomics platforms (Tempus, Foundation) produce correlation. BiRAGAS validates whether the target itself is correct, screens which patients benefit, and outputs the mechanistic causal evidence the FDA requires - the upstream causal layer the others leave to the customer to build.", "audience": "Drug Discovery / Translational", "runs": "Mixed", "modules": "Causal DAG builder; Causal calculus; Molecular report / dossier", "output": "upstream causal validation", "ti": 15, "img": "assets/q44.jpg", "modlist": ["Causal DAG builder", "Causal calculus", "Molecular report / dossier"]}, {"theme": "Strategic drug-discovery questions", "q": 45, "question": "Can BiRAGAS repurpose or reposition existing drugs by mechanism rather than trial-and-error?", "answer": "Yes - Perturbation analysis leverages DepMap and L1000 (drug-response) evidence over your causal targets, so you can connect a validated causal node to compounds that perturb it, prioritizing repositioning hypotheses by mechanism rather than screening blindly.", "audience": "Drug Discovery / Translational", "runs": "Full engine", "modules": "Perturbation analysis; In silico perturbation (population)", "output": "mechanism-ranked compounds", "ti": 15, "img": "assets/q45.jpg", "modlist": ["Perturbation analysis", "In silico perturbation (population)"]}, {"theme": "Strategic drug-discovery questions", "q": 46, "question": "I work on a specific disease (e.g. AML, melanoma, diabetic nephropathy). Has this been demonstrated?", "answer": "The methodology was validated retroactively on the BeatAML2 cohort (800+ patients): BiRAGAS called 8 of 11 AML drugs correctly and in the right context (bypass calls for venetoclax, FLT3, PLK1 matched patient observations), and surfaced novel targets that DE analysis alone missed. Active pilots/collaborations span melanoma (drug resistance), diabetic nephropathy, computational pathology and neurodegeneration.", "audience": "Senior Scientist", "runs": "Full engine", "modules": "In silico perturbation (patient); Perturbation analysis", "output": "validated case evidence", "ti": 15, "img": "assets/q46.jpg", "modlist": ["In silico perturbation (patient)", "Perturbation analysis"]}, {"theme": "Strategic drug-discovery questions", "q": 47, "question": "Bottleneck: every analysis needs a trained bioinformatician, so science waits on a queue of a few techs.", "answer": "Causion removes the operator bottleneck - any translational scientist can run the 28 modules in plain English, so throughput is limited by scientific questions, not by who can run a pipeline.", "audience": "Bioinformatician", "runs": "In-app", "modules": "Causion co-pilot", "output": "self-serve analysis", "ti": 15, "img": "assets/q47.jpg", "modlist": ["Causion co-pilot"]}, {"theme": "Strategic drug-discovery questions", "q": 48, "question": "Bottleneck: results are association-only; I can't tell drivers from passengers.", "answer": "The causal layer (DAG + do-calculus + MR + in-silico perturbation) and Causal Confidence Scoring explicitly rank drivers vs passengers - the exact gap correlation tooling can't close.", "audience": "Bioinformatician", "runs": "Mixed", "modules": "Causal DAG builder; Causal calculus; GWAS / Mendelian randomization", "output": "driver vs passenger ranking", "ti": 15, "img": "assets/q48.jpg", "modlist": ["Causal DAG builder", "Causal calculus", "GWAS / Mendelian randomization"]}, {"theme": "Strategic drug-discovery questions", "q": 49, "question": "Bottleneck: I can't reconcile conflicting single-tool results (DEG says one thing, network another).", "answer": "Multi-stream convergence fuses observational, temporal, genetic and interventional evidence into one graph and scores agreement - so conflicting single-tool outputs are reconciled into a single confidence-weighted answer instead of leaving you to arbitrate.", "audience": "Senior Scientist", "runs": "In-app", "modules": "Causal DAG builder", "output": "reconciled consensus DAG", "ti": 15, "img": "assets/q49.jpg", "modlist": ["Causal DAG builder"]}, {"theme": "Strategic drug-discovery questions", "q": 50, "question": "Bottleneck: building the FDA regulatory-evidence layer by hand takes months per target.", "answer": "BiRAGAS emits the source-linked, FDA-aligned dossier automatically the moment a target is identified - turning a slow, manual regulatory-writing process into a software feature.", "audience": "Drug Discovery / Translational", "runs": "Full engine", "modules": "Molecular report / dossier", "output": "auto-generated dossier", "ti": 15, "img": "assets/q50.jpg", "modlist": ["Molecular report / dossier"]}, {"theme": "Strategic drug-discovery questions", "q": 51, "question": "Bottleneck: wet-lab validation (CRISPR, patient trials) is too slow and expensive to explore broadly.", "answer": "In-silico perturbation and in-silico CRISPR simulate knockout and patient-response 'what-if' trials in minutes, filtering paradoxical/inactive hypotheses so only the strongest candidates consume wet-lab and clinical resources.", "audience": "Senior Scientist", "runs": "Full engine", "modules": "Perturbation analysis; In silico perturbation (patient)", "output": "in-silico pre-screen", "ti": 15, "img": "assets/q51.jpg", "modlist": ["Perturbation analysis", "In silico perturbation (patient)"]}]};
+const themes=DATA.themes, questions=DATA.questions;
+const tById={}; themes.forEach(t=>tById[t.i]=t);
+
+/* marquee */
+const mrow=themes.map(t=>t.name).join('   ◆   ');
+document.getElementById('marq').innerHTML='<span>'+mrow+'</span><span>'+mrow+'</span>';
+
+/* audience buttons */
+const auds=[...new Set(questions.map(q=>q.audience))].sort();
+let curAud='All', curTheme=0, curQ='';
+const audsEl=document.getElementById('auds');
+['All',...auds].forEach(a=>{
+  const b=document.createElement('button');b.className='pill'+(a==='All'?' on':'');b.textContent=a;
+  b.onclick=()=>{curAud=a;[...audsEl.children].forEach(c=>c.classList.remove('on'));b.classList.add('on');render();};
+  audsEl.appendChild(b);
+});
+/* theme filter */
+const thEl=document.getElementById('themes');
+const allBtn=document.createElement('button');allBtn.className='pill on';allBtn.textContent='All themes';
+allBtn.onclick=()=>{curTheme=0;[...thEl.children].forEach(c=>c.classList.remove('on'));allBtn.classList.add('on');render();};
+thEl.appendChild(allBtn);
+themes.forEach(t=>{
+  const b=document.createElement('button');b.className='pill';
+  b.innerHTML='<span class="dot" style="background:'+t.color+'"></span>'+t.name;
+  b.onclick=()=>{curTheme=t.i;[...thEl.children].forEach(c=>c.classList.remove('on'));b.classList.add('on');render();};
+  thEl.appendChild(b);
+});
+document.getElementById('q').addEventListener('input',e=>{curQ=e.target.value.toLowerCase();render();});
+
+const cardsEl=document.getElementById('cards');
+function esc(s){return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+function render(){
+  const list=questions.filter(q=>{
+    if(curTheme && q.ti!==curTheme) return false;
+    if(curAud!=='All' && q.audience!==curAud) return false;
+    if(curQ){const blob=(q.question+' '+q.answer+' '+q.modules+' '+q.theme).toLowerCase();if(!blob.includes(curQ))return false;}
+    return true;
+  });
+  document.getElementById('count').textContent=list.length+' of 51 questions'+(curTheme?' · '+tById[curTheme].name:'')+(curAud!=='All'?' · '+curAud:'');
+  cardsEl.innerHTML=list.map(q=>{
+    const t=tById[q.ti];
+    return '<article class="qc"><div class="imgwrap" data-img="'+q.img+'" data-cap="Q'+q.q+' — '+esc(q.question)+'">'
+      +'<span class="tband" style="background:'+t.color+'">'+String(t.i).padStart(2,'0')+' · '+esc(t.name)+'</span>'
+      +'<span class="qn">Q'+q.q+'</span>'
+      +'<img loading="lazy" src="'+q.img+'" alt="Illustration for Q'+q.q+'"></div>'
+      +'<div class="body"><div class="q">'+esc(q.question)+'</div>'
+      +'<div class="a">'+esc(q.answer)+'</div>'
+      +'<div class="chips"><span class="chip aud">'+esc(q.audience)+'</span>'
+      +'<span class="chip run">'+esc(q.runs)+'</span>'
+      +q.modlist.slice(0,3).map(m=>'<span class="chip">'+esc(m)+'</span>').join('')
+      +'</div></div></article>';
+  }).join('');
+  // reveal
+  const obs=new IntersectionObserver((en)=>{en.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');obs.unobserve(x.target);}})},{threshold:.08});
+  cardsEl.querySelectorAll('.qc').forEach((c,i)=>{c.style.transitionDelay=(i%3*60)+'ms';obs.observe(c);});
+  cardsEl.querySelectorAll('.imgwrap').forEach(w=>w.onclick=()=>openLb(w.dataset.img,w.dataset.cap));
+}
+render();
+
+/* audience grid */
+document.getElementById('audgrid').innerHTML=auds.map(a=>{
+  const n=questions.filter(q=>q.audience===a).length;
+  return '<div class="audcard"><span>'+n+'</span><b>'+esc(a)+'</b><small>questions</small></div>';
+}).join('');
+
+/* lightbox */
+const lb=document.getElementById('lb'),lbimg=document.getElementById('lbimg'),lbcap=document.getElementById('lbcap');
+function openLb(src,cap){lbimg.src=src;lbcap.textContent=cap;lb.classList.add('on');}
+lb.onclick=()=>lb.classList.remove('on');
+document.addEventListener('keydown',e=>{if(e.key==='Escape')lb.classList.remove('on');});
+
+/* count-up */
+const io=new IntersectionObserver((en)=>{en.forEach(x=>{if(x.isIntersecting){const el=x.target,to=+el.dataset.c;let n=0;const st=Math.max(1,Math.round(to/34));const t=setInterval(()=>{n+=st;if(n>=to){n=to;clearInterval(t);}el.textContent=n;},26);io.unobserve(el);}})},{threshold:.5});
+document.querySelectorAll('.stat b').forEach(el=>io.observe(el));
+
+/* reveal sections */
+const ro=new IntersectionObserver((en)=>{en.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');ro.unobserve(x.target);}})},{threshold:.12});
+document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%4*70)+'ms';ro.observe(el);});
+
+/* caption/clean toggle */
+(function(){
+  const film=document.getElementById('film'),src=document.getElementById('filmsrc'),dl=document.getElementById('filmdl');
+  const SRC={captioned:'assets/film_captioned.mp4',clean:'assets/film_clean.mp4'};
+  document.querySelectorAll('#captoggle button').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('#captoggle button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+    const t=film.currentTime,playing=!film.paused;
+    src.src=SRC[b.dataset.cap];dl.href=SRC[b.dataset.cap];film.load();
+    film.addEventListener('loadedmetadata',()=>{try{film.currentTime=t;}catch(e){}if(playing)film.play();},{once:true});
+  });
+})();
+
+/* hero network animation */
+const cv=document.getElementById('net'),cx=cv.getContext('2d');
+let W,H,pts;
+function initNet(){W=cv.width=cv.offsetWidth;H=cv.height=cv.offsetHeight;pts=Array.from({length:Math.min(48,Math.round(W/28))},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.32,vy:(Math.random()-.5)*.32}));}
+function drawNet(){cx.clearRect(0,0,W,H);
+  for(let i=0;i<pts.length;i++){const p=pts[i];p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;}
+  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const a=pts[i],b=pts[j],d=Math.hypot(a.x-b.x,a.y-b.y);if(d<128){cx.strokeStyle='rgba(31,56,100,'+(1-d/128)*.20+')';cx.lineWidth=1;cx.beginPath();cx.moveTo(a.x,a.y);cx.lineTo(b.x,b.y);cx.stroke();}}
+  for(const p of pts){cx.fillStyle='rgba(200,16,46,.55)';cx.beginPath();cx.arc(p.x,p.y,2.1,0,7);cx.fill();}
+  requestAnimationFrame(drawNet);}
+initNet();drawNet();window.addEventListener('resize',initNet);
+</script>
+</body>
+</html>
