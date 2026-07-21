@@ -177,6 +177,14 @@ footer .big{font-weight:800;color:var(--ink);font-size:15px;margin-bottom:6px}
 .brochure h3{font-family:var(--sans);font-size:17px;margin-bottom:5px}
 .brochure p{color:var(--sub);font-size:13.5px;margin:0 0 16px}
 .brochure .dlrow{display:flex;flex-direction:column;gap:10px;margin-top:auto}
+.flipstage{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow2);margin-bottom:12px;cursor:zoom-in;background:#fff}
+.flipstage img{width:100%;display:block}
+.flipnav{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:14px}
+.flipnav .arrow{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--gold);background:#fff;color:var(--red);font-size:18px;cursor:pointer;display:grid;place-items:center;transition:.15s}
+.flipnav .arrow:hover{background:var(--red);color:#fff;border-color:var(--red)}
+.flipnav .arrow:disabled{opacity:.35;cursor:default}
+.flipnav .ctr{font-family:var(--sans);font-weight:700;font-size:12.5px;color:var(--sub);min-width:88px;text-align:center}
+.fliprng{width:100%;margin:0 0 14px}
 </style>
 </head>
 <body>
@@ -238,9 +246,14 @@ footer .big{font-weight:800;color:var(--ink);font-size:15px;margin-bottom:6px}
         </div>
       </div>
       <div class="brochure">
-        <div class="thumb"><img src="assets/cover.jpg" alt="BiRAGAS brochure cover"><span class="pg">51 pages</span></div>
-        <h3>The illustrated brochure</h3>
-        <p>All 51 questions &amp; answers across 16 themes, fully illustrated — as a print-ready PDF.</p>
+        <h3 style="margin-bottom:12px">The illustrated brochure</h3>
+        <div class="flipstage"><img id="bpg" src="assets/pages/p01.jpg" alt="Brochure page 1"></div>
+        <div class="flipnav">
+          <button class="arrow" id="bprev" aria-label="Previous page">‹</button>
+          <span class="ctr" id="bctr">Page 1 / 70</span>
+          <button class="arrow" id="bnext" aria-label="Next page">›</button>
+        </div>
+        <input class="fliprng" id="brng" type="range" min="1" max="70" value="1" aria-label="Jump to page">
         <div class="dlrow">
           <a class="btn btn-red" style="justify-content:center" href="assets/BiRAGAS_Bioinformatics_Help_Booklet.pdf" download>⬇ Download the brochure (PDF)</a>
           <a class="btn btn-ghost" style="justify-content:center" href="assets/BiRAGAS_Bioinformatics_Help_Booklet.pdf" target="_blank" rel="noopener">Open in a new tab</a>
@@ -410,6 +423,20 @@ document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(
     src.src=SRC[b.dataset.cap];dl.href=SRC[b.dataset.cap];film.load();
     film.addEventListener('loadedmetadata',()=>{try{film.currentTime=t;}catch(e){}if(playing)film.play();},{once:true});
   });
+})();
+
+/* brochure flipbook */
+(function(){
+  const N=70;let cur=1;
+  const bpg=document.getElementById('bpg'),bctr=document.getElementById('bctr'),
+        bprev=document.getElementById('bprev'),bnext=document.getElementById('bnext'),brng=document.getElementById('brng');
+  const pad=n=>(n<10?'0':'')+n;
+  function show(n){cur=Math.max(1,Math.min(N,n));bpg.src='assets/pages/p'+pad(cur)+'.jpg';bpg.alt='Brochure page '+cur;
+    bctr.textContent='Page '+cur+' / '+N;brng.value=cur;bprev.disabled=(cur===1);bnext.disabled=(cur===N);
+    const nx=new Image();nx.src='assets/pages/p'+pad(Math.min(N,cur+1))+'.jpg';}
+  bprev.onclick=()=>show(cur-1);bnext.onclick=()=>show(cur+1);brng.oninput=()=>show(+brng.value);
+  document.querySelector('.flipstage').onclick=()=>openLb(bpg.src,'Brochure — page '+cur+' of '+N);
+  show(1);
 })();
 
 /* hero network animation */
