@@ -46,6 +46,8 @@ section{padding:16px 0 40px}
 .role{font-family:-apple-system,sans-serif;font-weight:700;font-size:13px;color:var(--ink)}
 .cxnote{font-size:14px;color:#40524f;margin:9px 0 0}
 .widget{margin-top:12px}
+.gvlink{display:block;margin-top:10px;font-family:-apple-system,sans-serif;font-weight:700;font-size:12.5px;text-decoration:none;color:#fff;background:#1A1712;border-radius:9px;padding:9px 13px}
+.gvlink:hover{background:#333}
 .toggle{font-family:-apple-system,sans-serif;font-weight:700;font-size:12.5px;color:var(--teal);background:none;border:0;cursor:pointer;padding:6px 0 0;display:inline-flex;align-items:center;gap:6px}
 .wbody{display:none;margin-top:10px}.wbody.on{display:block}
 table.deg{width:100%;border-collapse:collapse;font-family:-apple-system,sans-serif;font-size:12px}
@@ -79,7 +81,7 @@ footer{text-align:center;padding:30px 0 54px;color:var(--sub);font-family:-apple
 <div class="wrap"><div class="count" id="count"></div></div>
 <section class="wrap"><div id="cards"></div>
   <div class="integrity"><b>Data-integrity note.</b> Every figure here is computed live from the versioned CZ CELLxGENE Census (build 2025-11-08) with scanpy — not mocked. The differential-expression panels use a <b>within-dataset</b> comparison with mitochondrial/ribosomal technical genes removed, because naively pooling all 34 lung datasets produced batch artifacts (log2FC≈−32) rather than biology — shown honestly under the batch questions. Genes were pre-selected by broad expression (nnz), which favours widely-expressed genes over fibroblast-specific markers such as COL1A1; the composition analysis independently recovers canonical IPF biology (AT2 &amp; alveolar-macrophage loss). "Contextual" tags mark questions the single-cell Census informs but does not itself answer (CRISPR editing, temporal ordering, genetic causality) — stated plainly rather than overclaimed.</div>
-  <div class="linkrow" style="justify-content:center"><a href="https://mayasss-gif.github.io/BiRAGAS-Help-Companion/">The Help Companion</a><a href="https://mayasss-gif.github.io/BiRAGAS-Live-Bio-Demos/">Live UMAP demos</a><a href="https://cellxgene.cziscience.com">CZ CELLxGENE</a></div>
+  <div class="linkrow" style="justify-content:center"><a href="https://mayasss-gif.github.io/BiRAGAS-Help-Companion/">The Help Companion</a><a href="https://mayasss-gif.github.io/BiRAGAS-Live-Bio-Demos/">Live UMAP demos</a><a href="https://mayasss-gif.github.io/BiRAGAS-Live-Bio-Demos/genome_epigenome_viewer/index.html">Genome / Epigenome browser ◧</a><a href="https://cellxgene.cziscience.com">CZ CELLxGENE</a></div>
 </section>
 <footer>Ayass Bioscience · BiRAGAS causal platform · data: CZ CELLxGENE Census (cellxgene.cziscience.com) · computed with scanpy · mayass@ayassbioscience.com</footer>
 <script>
@@ -108,6 +110,8 @@ const allB=document.createElement('button');allB.className='pill on';allB.textCo
 TH.forEach(t=>{const b=document.createElement('button');b.className='pill';b.innerHTML='<span class="dot" style="background:'+t.color+'"></span>'+esc(t.name);b.onclick=()=>{curT=t.i;[...tEl.children].forEach(c=>c.classList.remove('on'));b.classList.add('on');render();};tEl.appendChild(b);});
 document.getElementById('q').addEventListener('input',e=>{curQ=e.target.value.toLowerCase();render();});
 const cards=document.getElementById('cards');
+const GVURL="https://mayasss-gif.github.io/BiRAGAS-Live-Bio-Demos/genome_epigenome_viewer/index.html";
+const GVQ=new Set([1,6,28,29,30,31,32,33,37]);
 function render(){
  const list=Q.filter(q=>{if(curT&&q.ti!==curT)return false;if(curA!=='All'&&q.appl!==curA)return false;if(curQ){const b=(q.question+' '+q.answer+' '+q.note+' '+q.role+' '+q.theme).toLowerCase();if(!b.includes(curQ))return false;}return true;});
  document.getElementById('count').textContent=list.length+' of 51 questions';
@@ -118,6 +122,7 @@ function render(){
    +'<div class="cx"><div class="cxh"><span class="cxlogo">◆ CZ CELLxGENE Census</span><span class="abadge" data-a="'+q.appl+'">'+q.appl+'</span><span class="role">'+esc(q.role)+'</span></div>'
    +'<p class="cxnote">'+esc(q.note)+'</p>'
    +(w?'<div class="widget"><button class="toggle" onclick="this.nextElementSibling.classList.toggle(\'on\');this.textContent=this.nextElementSibling.classList.contains(\'on\')?\'▾ Hide the live Census view\':\'▸ Show the live Census view\'">▸ Show the live Census view</button><div class="wbody">'+w+'</div></div>':'')
+   +(GVQ.has(q.q)?'<a class="gvlink" href="'+GVURL+'" target="_blank" rel="noopener">◧ See the regulatory / epigenetic layer for this — transcription, promoters &amp; enhancers — in the genome &amp; epigenome browser →</a>':'')
    +'</div></article>';
  }).join('');
 }
