@@ -76,8 +76,7 @@ footer{text-align:center;padding:30px 0 54px;color:var(--sub);font-family:-apple
 <div class="filters"><div class="wrap">
   <div class="frow" id="appls"></div>
   <div class="frow" id="themes"></div>
-  <div class="searchb"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg><input id="q" placeholder="Search questions, answers, Census actions…"></div>
-</div></div>
+  </div></div>
 <div class="wrap"><div class="count" id="count"></div></div>
 <section class="wrap"><div id="cards"></div>
   <div class="integrity"><b>Data-integrity note.</b> Every figure here is computed live from the versioned CZ CELLxGENE Census (build 2025-11-08) with scanpy — not mocked. The differential-expression panels use a <b>within-dataset</b> comparison with mitochondrial/ribosomal technical genes removed, because naively pooling all 34 lung datasets produced batch artifacts (log2FC≈−32) rather than biology — shown honestly under the batch questions. Genes were pre-selected by broad expression (nnz), which favours widely-expressed genes over fibroblast-specific markers such as COL1A1; the composition analysis independently recovers canonical IPF biology (AT2 &amp; alveolar-macrophage loss). "Contextual" tags mark questions the single-cell Census informs but does not itself answer (CRISPR editing, temporal ordering, genetic causality) — stated plainly rather than overclaimed.</div>
@@ -108,7 +107,7 @@ const aEl=document.getElementById('appls');
 const tEl=document.getElementById('themes');
 const allB=document.createElement('button');allB.className='pill on';allB.textContent='All themes';allB.onclick=()=>{curT=0;[...tEl.children].forEach(c=>c.classList.remove('on'));allB.classList.add('on');render();};tEl.appendChild(allB);
 TH.forEach(t=>{const b=document.createElement('button');b.className='pill';b.innerHTML='<span class="dot" style="background:'+t.color+'"></span>'+esc(t.name);b.onclick=()=>{curT=t.i;[...tEl.children].forEach(c=>c.classList.remove('on'));b.classList.add('on');render();};tEl.appendChild(b);});
-document.getElementById('q').addEventListener('input',e=>{curQ=e.target.value.toLowerCase();render();});
+
 const cards=document.getElementById('cards');
 const GVURL="https://mayasss-gif.github.io/BiRAGAS-Live-Bio-Demos/genome_epigenome_viewer/index.html";
 const GVQ=new Set([1,6,28,29,30,31,32,33,37]);
