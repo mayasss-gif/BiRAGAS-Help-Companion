@@ -124,6 +124,12 @@ section{padding:70px 0}
 .qc .q{font-size:17px;font-weight:600;letter-spacing:-.005em}
 .qc .a{font-size:14px;color:var(--sub);line-height:1.6}
 .qc .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:8px}
+.cxlink{display:block;font-family:var(--sans);font-weight:700;font-size:12px;text-decoration:none;color:var(--teal);padding:10px 16px 14px;border-top:1px solid var(--tint);margin-top:8px}
+.cxlink:hover{color:var(--red)}
+.cxbanner{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;background:linear-gradient(180deg,#F3F9F9,#fff);border:1px solid #D9E7E7;border-radius:14px;padding:16px 20px;margin:0 auto 26px;max-width:820px}
+.cxbanner .t{font-family:var(--sans);font-size:14px;color:var(--gray)}
+.cxbanner .t b{color:var(--teal)}
+.cxbanner a{font-family:var(--sans);font-weight:700;font-size:13.5px;text-decoration:none;background:var(--teal);color:#fff;padding:9px 15px;border-radius:9px;white-space:nowrap}
 .chip{font-family:var(--sans);font-size:10.5px;font-weight:700;padding:4px 9px;border-radius:6px;background:#F4EEE3;color:var(--sub);border:1px solid var(--line)}
 .chip.aud{background:#EAF2FA;color:var(--navy);border-color:#D3E4F4}
 .chip.run{background:#E9F5EC;color:#2E7D32;border-color:#CDE9D5}
@@ -197,6 +203,7 @@ footer .big{font-weight:800;color:var(--ink);font-size:15px;margin-bottom:6px}
     <a href="#capabilities">Capabilities</a>
     <a href="#how">How it works</a>
     <a href="#companion">The 51 Questions</a>
+    <a href="cellxgene.html">CELLxGENE ◆</a>
     <a href="#who">Who it's for</a>
   </div>
   <a class="cta" href="https://app.biragas.com">Open app →</a>
@@ -295,6 +302,10 @@ footer .big{font-weight:800;color:var(--ink);font-size:15px;margin-bottom:6px}
   <div class="wrap">
     <div class="shead"><div class="rule"></div><h2>The 51 questions bioinformaticians actually ask</h2>
       <p>Every real question — from "where do I even start?" to "how do I produce FDA-grade causal evidence?" — with a plain-language answer and its illustration.</p></div>
+    <div class="cxbanner">
+      <span class="t">Each question is also mapped to a <b>real, live CZ CELLxGENE Census action</b> — computed on 125M+ cells, nothing simulated.</span>
+      <a href="cellxgene.html">Open the 51 × CELLxGENE explorer ◆</a>
+    </div>
     <div class="audrow" id="auds"></div>
     <div class="filters" id="themes"></div>
     <div class="count" id="count"></div>
@@ -381,7 +392,8 @@ function render(){
       +'<div class="chips"><span class="chip aud">'+esc(q.audience)+'</span>'
       +'<span class="chip run">'+esc(q.runs)+'</span>'
       +q.modlist.slice(0,3).map(m=>'<span class="chip">'+esc(m)+'</span>').join('')
-      +'</div></div></article>';
+      +'</div></div>'
+      +'<a class="cxlink" href="cellxgene.html#q'+q.q+'">◆ Live CZ CELLxGENE Census view for this question →</a></article>';
   }).join('');
   // reveal
   const obs=new IntersectionObserver((en)=>{en.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');obs.unobserve(x.target);}})},{threshold:.08});
